@@ -5,7 +5,8 @@ const ContactForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState(false);
+  const form = useRef();
   const handleName = (e) => {
     setName(e.target.value);
   };
@@ -15,7 +16,7 @@ const ContactForm = () => {
   const handleMessage = (e) => {
     setMessage(e.target.value);
   };
-  const form = useRef();
+  
   const sendEmail = (e) => {
     e.preventDefault();
     emailjs
@@ -27,7 +28,10 @@ const ContactForm = () => {
           setEmail("");
           setName("");
           setMessage("");
-          setSuccess("Message Sent Succesfully");
+          setSuccess(true);
+          setTimeout(() => {
+            setSuccess(false);
+          }, 3000);
         },
         (error) => {
           console.log("FAILED...", error.text);
@@ -36,8 +40,13 @@ const ContactForm = () => {
   };
 
   return (
-    <div>
-      <p className="text-cyan">{success}</p>
+      <div className="relative">
+      {/* Success Popup */}
+      {success && (
+        <div className="fixed bottom-4 left-4 bg-white text-black text-center py-2 px-4 rounded-lg shadow-lg">
+          Message has been sent successfully!
+        </div>
+      )}
       <form ref={form} onSubmit={sendEmail} className="flex flex-col gap-4">
         <input
           type="text"
